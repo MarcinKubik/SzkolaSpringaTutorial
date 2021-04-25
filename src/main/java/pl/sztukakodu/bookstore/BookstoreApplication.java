@@ -4,6 +4,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import pl.sztukakodu.bookstore.catalog.domain.CatalogRepository;
 import pl.sztukakodu.bookstore.catalog.infrastructure.BestsellerCatalogRepository;
 import pl.sztukakodu.bookstore.catalog.infrastructure.SchoolCatalogRepository;
@@ -17,7 +18,7 @@ public class BookstoreApplication {
 
 	}
 
-	@Bean
+	/*@Bean
 	CatalogRepository catalogRepository(){
 
 		Random random = new Random();
@@ -28,5 +29,7 @@ public class BookstoreApplication {
 			System.out.println("Wylosowano BestsellerCatalogRepository");
 			return new BestsellerCatalogRepository();
 		}
-	}
+	}*/
+
+
 }

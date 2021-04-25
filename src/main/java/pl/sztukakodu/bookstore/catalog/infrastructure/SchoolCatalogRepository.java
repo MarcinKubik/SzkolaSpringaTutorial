@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-//@Repository
+@Repository
 public class SchoolCatalogRepository implements CatalogRepository {
 
     private final Map<Long, Book> storage = new ConcurrentHashMap<>();
@@ -20,6 +20,7 @@ public class SchoolCatalogRepository implements CatalogRepository {
         storage.put(2L, new Book(1L, "Ogniem i mieczem", "Henryk Sienkiewicz", 1884));
         storage.put(3L, new Book(1L, "Chłopi", "Władysław Reymont", 1904));
         storage.put(4L, new Book(1L, "Pan Wołodyjowski", "Henryk Sienkiewicz", 1904));
+        storage.put(5L, new Book(5L, "Dziady", "Adam Mickiewicz", 2222));
     }
 
     @Override
