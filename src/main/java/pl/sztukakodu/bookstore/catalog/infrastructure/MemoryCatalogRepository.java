@@ -8,21 +8,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class BestsellerCatalogRepository implements CatalogRepository {
+public class MemoryCatalogRepository implements CatalogRepository {
 
     private final Map<Long, Book> storage = new ConcurrentHashMap<>();
+    private final AtomicLong ID_NEXT_VALUE = new AtomicLong(0L);
 
-    public BestsellerCatalogRepository() {
-        storage.put(1L, new Book(1L, "Harry Potter", "JK Rowling", 1834));
-        storage.put(2L, new Book(1L, "Władca Pierścieni", "Henryk Sienkiewicz", 1884));
-        storage.put(3L, new Book(1L, "Mężczyźni którzy nienawidzą kobiet", "Władysław Reymont", 1904));
-        storage.put(4L, new Book(1L, "Sezon burz", "Henryk Sienkiewicz", 1904));
-    }
 
     @Override
     public List<Book> findAll() {
         return new ArrayList<>(storage.values());
+    }
+
+    @Override
+    public void save(Book book) {
+        long nextId = nextId();
+        book.setId(nextId);
+        storage.put(nextId, book);
+    }
+
+    private long nextId(){
+        return ID_NEXT_VALUE.getAndIncrement();
     }
 }
