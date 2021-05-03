@@ -6,9 +6,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.sztukakodu.bookstore.catalog.application.port.CatalogUseCase;
 import pl.sztukakodu.bookstore.catalog.application.port.CatalogUseCase.CreateBookCommand;
+import pl.sztukakodu.bookstore.catalog.application.port.CatalogUseCase.UpdateBookCommand;
 import pl.sztukakodu.bookstore.catalog.domain.Book;
 
 import java.util.List;
+
+import static pl.sztukakodu.bookstore.catalog.application.port.CatalogUseCase.*;
 
 @Component
 public class ApplicationStartup implements CommandLineRunner {
@@ -54,7 +57,17 @@ public class ApplicationStartup implements CommandLineRunner {
         booksByAuthor.forEach(System.out::println);
     }
 
+
     private void findAndUpdate() {
-        catalog.findOneByTitleAndAuthor("Pan Tadeusz", "Adam Mickiewicz");
+        catalog.findOneByTitleAndAuthor("Pan Tadeusz", "Adam Mickiewicz")
+                .ifPresent(book -> {
+                    UpdateBookCommand updateBookCommand = UpdateBookCommand
+                            .builder()
+                            .id(book.getId())
+                            .title("Pan Tadeusz, czyli Ostatni Zajazd na Litwie")
+                            .build();
+                    UpdateBookResponse response = catalog.updateBook(updateBookCommand);
+                    System.out.println("Updating book result: " + response.isSuccess());
+                });
     }
 }

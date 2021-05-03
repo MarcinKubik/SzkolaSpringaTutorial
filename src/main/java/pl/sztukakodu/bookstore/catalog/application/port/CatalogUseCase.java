@@ -1,5 +1,6 @@
 package pl.sztukakodu.bookstore.catalog.application.port;
 
+import lombok.Builder;
 import lombok.Value;
 import pl.sztukakodu.bookstore.catalog.domain.Book;
 
@@ -24,7 +25,7 @@ public interface CatalogUseCase {
 
     UpdateBookResponse updateBook(UpdateBookCommand command);
 
-    @Value  // from lombok, all fields private final, getters, setters, toString, constructor
+    @Value  // from lombok, all fields private final, getters, setters, toString, constructor all args
     class CreateBookCommand {
         String title;
         String author;
@@ -32,11 +33,25 @@ public interface CatalogUseCase {
     }
 
     @Value
+    @Builder
     class UpdateBookCommand{
         Long id;
         String title;
         String author;
         Integer year;
+
+       public Book updateFields(Book book){
+            if(title != null){
+                book.setTitle(title);
+            }
+            if(author != null){
+                book.setAuthor(author);
+            }
+            if (year != null){
+                book.setYear(year);
+            }
+            return book;
+        }
     }
 
     @Value

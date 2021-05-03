@@ -8,6 +8,7 @@ import pl.sztukakodu.bookstore.catalog.domain.Book;
 import pl.sztukakodu.bookstore.catalog.domain.CatalogRepository;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -63,16 +64,14 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public UpdateBookResponse updateBook(UpdateBookCommand command) {
-        repository.findById(command.getId())
+       return repository.findById(command.getId())
         .map(book -> {
-            book.setTitle(command.getTitle());
-            book.setAuthor(command.getAuthor());
-            book.setYear(command.getYear());
+            Book updatedBook = command.updateFields(book);
+            repository.save(updatedBook);
             return UpdateBookResponse.SUCCESS;
         })
-            .orElseGet(() -> new UpdateBookResponse(false, Arrays.asList("Book not found")));
+                .orElseGet(() -> new UpdateBookResponse(false, Collections.singletonList("Book not found with id" + command.getId())));
 
-        return null;
     }
 
 }
