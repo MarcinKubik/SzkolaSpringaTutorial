@@ -12,7 +12,7 @@ import static java.util.Collections.emptyList;
 
 public interface CatalogUseCase {
     List<Book> findByTitle(String title);
-
+    Optional<Book> findOneByTitle(String title);
     List<Book> findByAuthor(String author);
 
     List<Book> findAll();

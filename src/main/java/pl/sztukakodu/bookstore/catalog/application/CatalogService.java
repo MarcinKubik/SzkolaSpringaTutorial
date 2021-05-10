@@ -59,7 +59,7 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public void removeById(Long id){
-
+        repository.removeById(id);
     }
 
     @Override
