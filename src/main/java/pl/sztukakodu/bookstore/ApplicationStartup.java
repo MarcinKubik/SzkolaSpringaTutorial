@@ -11,7 +11,9 @@ import pl.sztukakodu.bookstore.catalog.domain.Book;
 import pl.sztukakodu.bookstore.order.application.port.PlaceOrderUseCase;
 import pl.sztukakodu.bookstore.order.application.port.QueryOrderUseCase;
 import pl.sztukakodu.bookstore.order.domain.OrderItem;
+import pl.sztukakodu.bookstore.order.domain.Recipient;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static pl.sztukakodu.bookstore.catalog.application.port.CatalogUseCase.*;
@@ -52,9 +54,18 @@ public class ApplicationStartup implements CommandLineRunner {
         Book panTadeusz = catalog.findOneByTitle("Pan Tadeusz").orElseThrow(() -> new IllegalStateException("Cannot find a book"));
         Book chlopi = catalog.findOneByTitle("Chłopi").orElseThrow(() -> new IllegalStateException("Cannot find a book"));
 
+        Recipient recipient = Recipient.
+                builder()
+                .name("Jan Kowalski")
+                .phone("123-456-789")
+                .street("Armii Krajowej 31")
+                .city("Krakow")
+                .zipCode("30-150")
+                .email("jan@example.org")
+                .build();
         PlaceOrderCommand command= PlaceOrderCommand
                 .builder()
-                .recipient(null)
+                .recipient(recipient)
                 .item(new OrderItem(panTadeusz, 16))
                 .item(new OrderItem(chlopi, 7))
                 .build();
@@ -63,7 +74,7 @@ public class ApplicationStartup implements CommandLineRunner {
         System.out.println("Created order with id: " + response.getOrderId());
 
         queryOrder.findAll().forEach(order -> {
-            System.out.println("GOT ORDER WITH TOTAL PRICE: " + order.totalPrice() + "DETAILS: " + order);
+            System.out.println("GOT ORDER WITH TOTAL PRICE: " + order.totalPrice() + " DETAILS: " + order);
         });
     }
 
@@ -75,10 +86,10 @@ public class ApplicationStartup implements CommandLineRunner {
 
 
     private void initData() {
-        catalog.addBook(new CreateBookCommand("Pan Tadeusz", "Adam Mickiewicz", 1834));
-        catalog.addBook(new CreateBookCommand("Ogniem i mieczem", "Henryk Sienkiewicz", 1884));
-        catalog.addBook(new CreateBookCommand("Chłopi", "Władysław Reymont", 1904));
-        catalog.addBook(new CreateBookCommand("Pan Wołodyjowski", "Henryk Sienkiewicz", 1899));
+        catalog.addBook(new CreateBookCommand("Pan Tadeusz", "Adam Mickiewicz", 1834, new BigDecimal("19.90")));
+        catalog.addBook(new CreateBookCommand("Ogniem i mieczem", "Henryk Sienkiewicz", 1884, new BigDecimal("29.90")));
+        catalog.addBook(new CreateBookCommand("Chłopi", "Władysław Reymont", 1904, new BigDecimal("11.90")));
+        catalog.addBook(new CreateBookCommand("Pan Wołodyjowski", "Henryk Sienkiewicz", 1899, new BigDecimal("14.90")));
     }
 
     private void findByTitle() {
