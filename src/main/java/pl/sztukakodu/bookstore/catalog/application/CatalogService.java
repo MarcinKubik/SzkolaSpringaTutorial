@@ -7,10 +7,7 @@ import pl.sztukakodu.bookstore.catalog.application.port.CatalogUseCase;
 import pl.sztukakodu.bookstore.catalog.domain.Book;
 import pl.sztukakodu.bookstore.catalog.domain.CatalogRepository;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +22,25 @@ class CatalogService implements CatalogUseCase {
     }
 
     @Override
+    public List<Book> findListByTitleAndAuthor(String title, String author) {
+        return repository.findAll()
+                .stream()
+                .filter(book -> book.getTitle().toLowerCase().startsWith(title.toLowerCase()))
+                .filter(book -> book.getAuthor().toLowerCase().startsWith(author.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<Book> findByTitle(String title){
         return repository.findAll()
                 .stream()
-                .filter(book -> book.getTitle().startsWith(title))
+                .filter(book -> book.getTitle().toLowerCase().startsWith(title.toLowerCase()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<Book> findById(Long id) {
+        return repository.findById(id);
     }
 
     @Override
@@ -44,7 +55,7 @@ class CatalogService implements CatalogUseCase {
     public List<Book> findByAuthor(String author){
         return repository.findAll()
                 .stream()
-                .filter(book -> book.getAuthor().startsWith(author))
+                .filter(book -> book.getAuthor().toLowerCase().startsWith(author.toLowerCase()))
                 .collect(Collectors.toList());
     }
 

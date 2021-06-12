@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.sztukakodu.bookstore.order.application.port.PlaceOrderUseCase;
 import pl.sztukakodu.bookstore.order.domain.Order;
 import pl.sztukakodu.bookstore.order.domain.OrderRepository;
+import pl.sztukakodu.bookstore.order.domain.OrderStatus;
 
 @Service
 @RequiredArgsConstructor

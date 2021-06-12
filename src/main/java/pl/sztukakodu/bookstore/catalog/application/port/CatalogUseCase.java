@@ -13,10 +13,16 @@ import static java.util.Collections.emptyList;
 
 public interface CatalogUseCase {
     List<Book> findByTitle(String title);
+
+    Optional<Book> findById(Long id);
+
     Optional<Book> findOneByTitle(String title);
-    List<Book> findByAuthor(String author);
+
+    List<Book> findByAuthor(String autor);
 
     List<Book> findAll();
+
+    List<Book> findListByTitleAndAuthor(String title, String author);
 
     Optional<Book> findOneByTitleAndAuthor(String title, String author);
 
@@ -67,7 +73,7 @@ public interface CatalogUseCase {
     @Value
     class UpdateBookResponse{
         public static UpdateBookResponse SUCCESS = new UpdateBookResponse(true, emptyList());
-        boolean success;
+        boolean Success;
         List<String> errors;
     }
 }

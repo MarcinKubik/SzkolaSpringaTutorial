@@ -114,5 +114,7 @@ public class ApplicationStartup implements CommandLineRunner {
                     UpdateBookResponse response = catalog.updateBook(updateBookCommand);
                     System.out.println("Updating book result: " + response.isSuccess());
                 });
+
+
     }
 }

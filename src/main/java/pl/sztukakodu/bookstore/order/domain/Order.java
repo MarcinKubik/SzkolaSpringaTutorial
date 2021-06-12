@@ -20,7 +20,7 @@ public class Order {
     public BigDecimal totalPrice(){
        return items.stream()
                 .map(item -> item.getBook().getPrice().multiply(new BigDecimal(item.getQuantity())))
-               // .reduce((p1, p2) -> p1.add(p2)).get(); //with lambda
-               .reduce(BigDecimal.ZERO, BigDecimal::add);
+                //.reduce((p1, p2) -> p1.add(p2)).get(); //with lambda
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }
