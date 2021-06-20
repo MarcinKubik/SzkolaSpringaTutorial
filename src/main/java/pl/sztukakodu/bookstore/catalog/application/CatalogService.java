@@ -6,15 +6,20 @@ import org.springframework.stereotype.Service;
 import pl.sztukakodu.bookstore.catalog.application.port.CatalogUseCase;
 import pl.sztukakodu.bookstore.catalog.domain.Book;
 import pl.sztukakodu.bookstore.catalog.domain.CatalogRepository;
+import pl.sztukakodu.bookstore.uploads.application.port.UploadUseCase;
+import pl.sztukakodu.bookstore.uploads.domain.Upload;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static pl.sztukakodu.bookstore.uploads.application.port.UploadUseCase.*;
 
 @Service
 @AllArgsConstructor
 class CatalogService implements CatalogUseCase {
 
     private final CatalogRepository repository;
+    private final UploadUseCase upload;
 
     @Override
     public List<Book> findAll(){
@@ -95,12 +100,25 @@ class CatalogService implements CatalogUseCase {
 
     @Override
     public void updateBookCover(UpdateBookCoverCommand command) {
-        int length = command.getFile().length;
-        System.out.println("Received cover command: " + command.getFilename() + " bytes: " + length);
         repository.findById(command.getId())
-                .ifPresent(book ->{}
-                        //book.setCoverId());
+                .ifPresent(book ->{
+                    Upload savedUpload = upload.save(new SaveUploadCommand(command.getFilename(), command.getFile(), command.getContentType()));
+                    book.setCoverId(savedUpload.getId());
+                    repository.save(book);
+                        }
+
                 );
+    }
+
+    @Override
+    public void removeBookCover(Long id) {
+        repository.findById(id).ifPresent(book -> {
+            if (book.getCoverId() != null) {
+                upload.removeById(book.getCoverId());
+                book.setCoverId(null);
+                repository.save(book);
+            }
+        });
     }
 
 }
