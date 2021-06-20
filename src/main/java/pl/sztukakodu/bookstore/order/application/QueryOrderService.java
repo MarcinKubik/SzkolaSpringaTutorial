@@ -7,6 +7,7 @@ import pl.sztukakodu.bookstore.order.domain.Order;
 import pl.sztukakodu.bookstore.order.domain.OrderRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -16,5 +17,10 @@ public class QueryOrderService implements QueryOrderUseCase {
     @Override
     public List<Order> findAll() {
         return repository.findAll();
+    }
+
+    @Override
+    public Optional<Order> findById(Long id) {
+        return repository.findById(id);
     }
 }
