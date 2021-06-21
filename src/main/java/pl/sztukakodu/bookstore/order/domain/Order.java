@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 @Builder
+
 public class Order {
     private Long id;
     @Builder.Default

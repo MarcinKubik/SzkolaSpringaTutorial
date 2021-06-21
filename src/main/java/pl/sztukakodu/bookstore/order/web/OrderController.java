@@ -10,9 +10,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import pl.sztukakodu.bookstore.order.application.port.PlaceOrderUseCase;
 import pl.sztukakodu.bookstore.order.application.port.PlaceOrderUseCase.PlaceOrderCommand;
 import pl.sztukakodu.bookstore.order.application.port.PlaceOrderUseCase.PlaceOrderResponse;
+import pl.sztukakodu.bookstore.order.application.port.PlaceOrderUseCase.UpdateOrderCommand;
+import pl.sztukakodu.bookstore.order.application.port.PlaceOrderUseCase.UpdateOrderResponse;
 import pl.sztukakodu.bookstore.order.application.port.QueryOrderUseCase;
 import pl.sztukakodu.bookstore.order.domain.Order;
 import pl.sztukakodu.bookstore.order.domain.OrderItem;
+import pl.sztukakodu.bookstore.order.domain.OrderStatus;
 import pl.sztukakodu.bookstore.order.domain.Recipient;
 
 import javax.validation.Valid;
@@ -51,8 +54,25 @@ public class OrderController {
             Order order = queryOrder.findById(response.getOrderId()).get();
             return ResponseEntity.created(createOrderUri(order)).build();
         } else{
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Your order couldn't be created");
+            String message = String.join(", ", response.getErrors());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
         }
+    }
+
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void updateOrder(@PathVariable Long id, @RequestBody RestOrderCommand command){
+        UpdateOrderResponse response = placeOrder.updateOrder(command.toUpdateOrderCommand(id));
+        if(!response.isSuccess()){
+            String message = String.join(", ", response.getErrors());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, message);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id){
+        placeOrder.removeById(id);
     }
 
     private URI createOrderUri(Order order){
@@ -67,11 +87,23 @@ public class OrderController {
         @NotNull
         private Recipient recipient;
 
+        private OrderStatus status;
+
 
         PlaceOrderCommand toPlaceOrderCommand(){
             return PlaceOrderCommand
                     .builder()
                     .items(items)
+                    .recipient(recipient)
+                    .build();
+        }
+
+        UpdateOrderCommand toUpdateOrderCommand(Long id){
+            return UpdateOrderCommand
+                    .builder()
+                    .id(id)
+                    .items(items)
+                    .status(status)
                     .recipient(recipient)
                     .build();
         }
